@@ -6,8 +6,12 @@ export class PaymentsService {
     // Placeholder for actual payment integration (e.g., Stripe)
     console.log(`Processing payment of ${amount} via ${paymentMethod}`);
     return {
-      status: 'success',
-      transactionId: `txn_${Date.now()}`,
+      success: true,
+      message: 'Payment processed successfully',
+      data: {
+        status: 'success',
+        transactionId: `txn_${Date.now()}`,
+      },
     };
   }
 }

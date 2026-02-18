@@ -12,7 +12,8 @@ export class OrdersService {
   ) {}
 
   async createOrder(userId: string, shippingAddress: string, couponCode?: string) {
-    const cart = await this.cartService.getCart(userId);
+    const cartResult = await this.cartService.getCart(userId);
+    const cart = cartResult.data;
     if (!cart.items.length) {
       throw new BadRequestException('Cart is empty');
     }
@@ -30,7 +31,7 @@ export class OrdersService {
       return sum + (item.product.price * item.quantity);
     }, 0) - discount;
 
-    return this.prisma.$transaction(async (tx) => {
+    const order = await this.prisma.$transaction(async (tx) => {
       // 1. Create the order
       const order = await tx.order.create({
         data: {
@@ -67,14 +68,25 @@ export class OrdersService {
 
       return order;
     });
+
+    return {
+      success: true,
+      message: 'Order placed successfully',
+      data: order,
+    };
   }
 
   async getUserOrders(userId: string) {
-    return this.prisma.order.findMany({
+    const orders = await this.prisma.order.findMany({
       where: { userId },
       include: { items: { include: { product: true } } },
       orderBy: { createdAt: 'desc' },
     });
+    return {
+      success: true,
+      message: 'Orders fetched successfully',
+      data: orders,
+    };
   }
 
   async getOrder(id: string) {
@@ -83,6 +95,10 @@ export class OrdersService {
       include: { items: { include: { product: true } }, user: true },
     });
     if (!order) throw new NotFoundException('Order not found');
-    return order;
+    return {
+      success: true,
+      message: 'Order fetched successfully',
+      data: order,
+    };
   }
 }

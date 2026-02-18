@@ -7,13 +7,23 @@ export class CategoriesService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: Prisma.CategoryCreateInput) {
-    return this.prisma.category.create({ data });
+    const category = await this.prisma.category.create({ data });
+    return {
+      success: true,
+      message: 'Category created successfully',
+      data: category,
+    };
   }
 
   async findAll() {
-    return this.prisma.category.findMany({
+    const categories = await this.prisma.category.findMany({
       include: { products: true },
     });
+    return {
+      success: true,
+      message: 'Categories fetched successfully',
+      data: categories,
+    };
   }
 
   async findOne(id: string) {
@@ -22,17 +32,30 @@ export class CategoriesService {
       include: { products: true },
     });
     if (!category) throw new NotFoundException('Category not found');
-    return category;
+    return {
+      success: true,
+      message: 'Category fetched successfully',
+      data: category,
+    };
   }
 
   async update(id: string, data: Prisma.CategoryUpdateInput) {
-    return this.prisma.category.update({
+    const category = await this.prisma.category.update({
       where: { id },
       data,
     });
+    return {
+      success: true,
+      message: 'Category updated successfully',
+      data: category,
+    };
   }
 
   async remove(id: string) {
-    return this.prisma.category.delete({ where: { id } });
+    await this.prisma.category.delete({ where: { id } });
+    return {
+      success: true,
+      message: 'Category deleted successfully',
+    };
   }
 }

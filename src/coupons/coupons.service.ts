@@ -7,11 +7,21 @@ export class CouponsService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: Prisma.CouponCreateInput) {
-    return this.prisma.coupon.create({ data });
+    const coupon = await this.prisma.coupon.create({ data });
+    return {
+      success: true,
+      message: 'Coupon created successfully',
+      data: coupon,
+    };
   }
 
   async findAll() {
-    return this.prisma.coupon.findMany();
+    const coupons = await this.prisma.coupon.findMany();
+    return {
+      success: true,
+      message: 'Coupons fetched successfully',
+      data: coupons,
+    };
   }
 
   async findByCode(code: string) {
@@ -19,17 +29,26 @@ export class CouponsService {
       where: { code },
     });
     if (!coupon) throw new NotFoundException('Coupon not found');
-    return coupon;
+    return {
+      success: true,
+      message: 'Coupon fetched successfully',
+      data: coupon,
+    };
   }
 
   async validateCoupon(code: string) {
-    const coupon = await this.findByCode(code);
+    const result = await this.findByCode(code);
+    const coupon = result.data;
     if (!coupon.isActive) throw new BadRequestException('Coupon is inactive');
     if (new Date() > coupon.expiryDate) throw new BadRequestException('Coupon is expired');
     return coupon;
   }
 
   async remove(id: string) {
-    return this.prisma.coupon.delete({ where: { id } });
+    await this.prisma.coupon.delete({ where: { id } });
+    return {
+      success: true,
+      message: 'Coupon deleted successfully',
+    };
   }
 }
