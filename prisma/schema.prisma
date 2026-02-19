@@ -46,6 +46,8 @@ model Product {
   description String
   price       Float
   stock       Int         @default(0)
+  imageUrl    String?     // Primary/thumbnail image URL
+  imageUrls   String[]    // Additional gallery image URLs
   categoryId  String
   category    Category    @relation(fields: [categoryId], references: [id])
   reviews     Review[]
