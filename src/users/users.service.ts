@@ -23,6 +23,12 @@ export class UsersService {
     });
   }
 
+  async findByPhone(phone: string): Promise<Users | null> {
+    return this.prisma.users.findUnique({
+      where: { phone },
+    });
+  }
+
   async findById(id: string): Promise<Users | null> {
     return this.prisma.users.findUnique({
       where: { id },

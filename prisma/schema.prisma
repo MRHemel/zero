@@ -14,6 +14,8 @@ model Users {
   id           String    @id @default(uuid())
   name         String
   email        String    @unique
+  countryCode  String?   // e.g. "+880", "+1"
+  phone        String?   @unique
   password     String
   role         UserRole  @default(CUSTOMER)
   refreshToken String?
