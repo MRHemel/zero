@@ -21,18 +21,18 @@ export class ReviewsService {
     };
   }
 
-  async getProductReviews(productId: string) {
-    const reviews = await this.prisma.review.findMany({
-      where: { productId },
-      include: { user: { select: { name: true } } },
-      orderBy: { createdAt: 'desc' },
-    });
-    return {
-      success: true,
-      message: 'Reviews fetched successfully',
-      data: reviews,
-    };
-  }
+  // async getProductReviews(productId: string) {
+  //   const reviews = await this.prisma.review.findMany({
+  //     where: { productId },
+  //     include: { user: { select: { name: true } } },
+  //     orderBy: { createdAt: 'desc' },
+  //   });
+  //   return {
+  //     success: true,
+  //     message: 'Reviews fetched successfully',
+  //     data: reviews,
+  //   };
+  // }
 
   async remove(userId: string, id: string) {
     await this.prisma.review.deleteMany({

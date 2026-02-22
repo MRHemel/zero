@@ -12,7 +12,8 @@ datasource db {
 
 model Users {
   id           String    @id @default(uuid())
-  name         String
+  firstName    String
+  lastName     String
   email        String    @unique
   countryCode  String?   // e.g. "+880", "+1"
   phone        String?   @unique

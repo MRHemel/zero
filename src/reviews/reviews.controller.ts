@@ -28,13 +28,13 @@ export class ReviewsController {
     );
   }
 
-  @Get('product/:productId')
-  @ApiOperation({ summary: 'Get all reviews for a product' })
-  @ApiParam({ name: 'productId', description: 'Product UUID' })
-  @ApiResponse({ status: 200, description: 'Returns list of reviews' })
-  getProductReviews(@Param('productId') productId: string) {
-    return this.reviewsService.getProductReviews(productId);
-  }
+  // @Get('product/:productId')
+  // @ApiOperation({ summary: 'Get all reviews for a product' })
+  // @ApiParam({ name: 'productId', description: 'Product UUID' })
+  // @ApiResponse({ status: 200, description: 'Returns list of reviews' })
+  // getProductReviews(@Param('productId') productId: string) {
+  //   return this.reviewsService.getProductReviews(productId);
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
