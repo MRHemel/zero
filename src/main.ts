@@ -27,7 +27,9 @@ async function bootstrap() {
   // Swagger / OpenAPI setup
   const config = new DocumentBuilder()
     .setTitle('Zero E-Commerce API')
-    .setDescription('Industry-standard REST API for the Zero e-commerce platform')
+    .setDescription(
+      'Industry-standard REST API for the Zero e-commerce platform',
+    )
     .setVersion('1.0')
     .addBearerAuth()
     .build();
@@ -35,6 +37,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(process.env.PORT ?? 3000);
+  const port = process.env.PORT ?? 8000;
+  await app.listen(port);
+  console.log(`🚀 Application started on port ${port}`);
 }
 bootstrap();
