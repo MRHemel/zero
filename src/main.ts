@@ -8,6 +8,12 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // Enable CORS
+  app.enableCors({
+    origin: true, // allow all origins (for development)
+    credentials: true,
+  });
+
   // Serve uploaded files as static assets
   // Accessible at: http://localhost:3000/uploads/<filename>
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
