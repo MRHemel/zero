@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { ProductSize } from '@prisma/client';
 
 @Injectable()
 export class CartService {
@@ -24,7 +25,13 @@ export class CartService {
     };
   }
 
-  async addToCart(userId: string, productId: string, quantity: number) {
+  async addToCart(
+    userId: string,
+    productId: string,
+    quantity: number,
+    size: ProductSize,
+    customRequirement?: string,
+  ) {
     const cart = await this.prisma.cart.findUnique({
       where: { userId },
       include: { items: { include: { product: true } } },
@@ -35,14 +42,18 @@ export class CartService {
       include: { items: { include: { product: true } } },
     });
 
+    // Check for existing item with same product AND same size
     const existingItem = await this.prisma.cartItem.findFirst({
-      where: { cartId: activeCart.id, productId },
+      where: { cartId: activeCart.id, productId, size },
     });
 
     if (existingItem) {
       const updated = await this.prisma.cartItem.update({
         where: { id: existingItem.id },
-        data: { quantity: existingItem.quantity + quantity },
+        data: {
+          quantity: existingItem.quantity + quantity,
+          customRequirement: customRequirement ?? existingItem.customRequirement,
+        },
       });
       return {
         success: true,
@@ -56,6 +67,8 @@ export class CartService {
         cartId: activeCart.id,
         productId,
         quantity,
+        size,
+        customRequirement,
       },
     });
     return {

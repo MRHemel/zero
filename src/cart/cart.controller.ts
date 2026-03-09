@@ -22,7 +22,13 @@ export class CartController {
   @ApiOperation({ summary: 'Add a product to cart' })
   @ApiResponse({ status: 201, description: 'Item added to cart' })
   addToCart(@Request() req, @Body() addToCartDto: AddToCartDto) {
-    return this.cartService.addToCart(req.user.id, addToCartDto.productId, addToCartDto.quantity);
+    return this.cartService.addToCart(
+      req.user.id,
+      addToCartDto.productId,
+      addToCartDto.quantity,
+      addToCartDto.size,
+      addToCartDto.customRequirement,
+    );
   }
 
   @Delete(':id')

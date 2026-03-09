@@ -67,15 +67,26 @@ model Cart {
   updatedAt DateTime   @updatedAt
 }
 
+enum ProductSize {
+  S
+  M
+  L
+  XL
+}
+
 model CartItem {
-  id        String   @id @default(uuid())
-  cartId    String
-  cart      Cart     @relation(fields: [cartId], references: [id])
-  productId String
-  product   Product  @relation(fields: [productId], references: [id])
-  quantity  Int      @default(1)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String      @id @default(uuid())
+  cartId            String
+  cart              Cart        @relation(fields: [cartId], references: [id])
+  productId         String
+  product           Product     @relation(fields: [productId], references: [id])
+  quantity          Int         @default(1)
+  size              ProductSize
+  customRequirement String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@unique([cartId, productId, size])
 }
 
 model Order {
@@ -102,13 +113,15 @@ enum OrderStatus {
 }
 
 model OrderItem {
-  id        String  @id @default(uuid())
-  orderId   String
-  order     Order   @relation(fields: [orderId], references: [id])
-  productId String
-  product   Product @relation(fields: [productId], references: [id])
-  quantity  Int
-  price     Float // Price at the time of purchase
+  id                String      @id @default(uuid())
+  orderId           String
+  order             Order       @relation(fields: [orderId], references: [id])
+  productId         String
+  product           Product     @relation(fields: [productId], references: [id])
+  quantity          Int
+  price             Float // Price at the time of purchase
+  size              ProductSize
+  customRequirement String?
 }
 
 model Coupon {
